@@ -9,7 +9,10 @@ db_worker = DBWorker(db)
 
 
 def publish_post(msg):
-    sended_message = bot.send_message(CHANNEL_ID, msg.text, disable_web_page_preview=True)
+    try:
+        sended_message = bot.send_message(CHANNEL_ID, msg.text, disable_web_page_preview=True)
+    except Exception:
+        return None
     return sended_message.message_id
 
 
@@ -42,8 +45,11 @@ def handle_message(msg):
 
     post = db_worker.create_post(sender, msg)
     published_message_id = publish_post(msg)
-    db_worker.update_post_msg_id(post, published_message_id)
-    bot.reply_to(msg, SUCCESS_PUBLISH)
+    if published_message_id:
+        db_worker.update_post_msg_id(post, published_message_id)
+        bot.reply_to(msg, SUCCESS_PUBLISH)
+    else:
+        post.delete()
 
 
 def main():
