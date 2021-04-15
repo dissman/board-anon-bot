@@ -17,8 +17,11 @@ class DBWorker:
                            last_name=msg.from_user.last_name)
 
     def make_users_previous_post_archived(self, user: User):
-        old_post = Post.get((Post.from_user == user) &
-                            (Post.archived == False))
+        try:
+            old_post = Post.get((Post.from_user == user) &
+                                (Post.archived == False))
+        except Exception:  # for now...
+            return None
         old_post.archived = True
         old_post.save()
         return old_post.msg_id
