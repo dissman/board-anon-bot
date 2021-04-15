@@ -22,7 +22,7 @@ class User(BaseModel):
 
 
 class Post(BaseModel):
-    from_user = ForeignKeyField(User, on_delete='SET NULL')
+    from_user = ForeignKeyField(User, on_delete='SET NULL', null=True)
     text = CharField(max_length=300)
     posted_at = DateTimeField(default=datetime.datetime.utcnow)
     msg_id = BigIntegerField(null=True)

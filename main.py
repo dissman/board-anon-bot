@@ -1,10 +1,8 @@
-
 import telebot
 
 from consts import *
 from db_worker import DBWorker
 from models import *
-
 
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode=None, threaded=False)
 db_worker = DBWorker(db)
@@ -37,9 +35,10 @@ def handle_message(msg):
             bot.reply_to(msg, TOO_OFTEN)
             return
         old_message_id = db_worker.make_users_previous_post_archived(sender)
-        # try:
-        bot.delete_message(CHANNEL_ID, old_message_id)
-        # except TelegramApiError:
+        try:
+            bot.delete_message(CHANNEL_ID, old_message_id)
+        except Exception:  # For now...
+            pass
 
     post = db_worker.create_post(sender, msg)
     published_message_id = publish_post(msg)
@@ -50,7 +49,7 @@ def handle_message(msg):
 def main():
     bot.delete_webhook(drop_pending_updates=True)
     db.create_tables([Post, User])
-    bot.polling()
+    bot.polling(timeout=6, long_polling_timeout=15)
 
 
 if __name__ == '__main__':
