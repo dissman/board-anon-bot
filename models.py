@@ -2,7 +2,9 @@ import datetime
 
 from peewee import *
 
-db = SqliteDatabase('anon.sqlite')
+# db = SqliteDatabase('anon.sqlite')
+db = MySQLDatabase('anon-board', user='root', password='',
+                   host='localhost', port=3306)
 
 
 class BaseModel(Model):
