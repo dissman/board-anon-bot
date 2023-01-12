@@ -1,11 +1,9 @@
 import telebot
-
 from consts import *
 from db_worker import DBWorker
-from models import *
 
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode=None, threaded=False)
-db_worker = DBWorker(db)
+db_worker = DBWorker()
 
 def publish_post(msg):
     """Publishes the given message to the channel.
@@ -48,7 +46,6 @@ def handle_message(msg):
         return
     if not sender:
         sender = db_worker.create_user(msg)
-        sender.save()
     else:
         if db_worker.too_often(sender):
             bot.reply_to(msg, TOO_OFTEN)
@@ -65,7 +62,9 @@ def handle_message(msg):
         db_worker.update_post_msg_id(post, published_message_id)
         bot.reply_to(msg, SUCCESS_PUBLISH)
     else:
-        post.delete()
+        db_worker.session.delete(post)
+       
+
 
 def main():
     """Starts the bot and sets up the database.
