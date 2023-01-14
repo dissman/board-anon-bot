@@ -2,6 +2,8 @@ from datetime import datetime
 from sqlalchemy.orm import sessionmaker
 from consts import USER_POST_INTERVAL
 
+from models import User, Post, engine
+
 class DBWorker:
     def __init__(self):
         # Create a session
@@ -90,7 +92,7 @@ class DBWorker:
         """
         if user.is_admin:
             return False
-            post = self.session.query(Post).filter(Post.from_user == user, Post.archived == False).first()
+        post = self.session.query(Post).filter(Post.from_user == user, Post.archived == False).first()
         if post is None:
             return False
 
