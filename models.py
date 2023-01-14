@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
 # Connect to the database
-engine = create_engine('mysql://root:@localhost:3306/anon-board')
+engine = create_engine('sqlite:///database.db')
 Base = declarative_base()
 
 class User(Base):
@@ -20,7 +20,7 @@ class Post(Base):
     __tablename__ = 'post'
     from_user_id = Column(String(20), ForeignKey('user.id'), nullable=True)
     text = Column(String(300))
-    posted_at = Column(DateTime, default=datetime.utcnow)
+    posted_at = Column(DateTime, default=datetime.utcnow, primary_key=True)
     msg_id = Column(Integer, nullable=True)
     archived = Column(Boolean, default=False)
     from_user = relationship("User", foreign_keys=[from_user_id])
