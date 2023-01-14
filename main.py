@@ -2,7 +2,9 @@ import telebot
 from consts import *
 from db_worker import DBWorker
 
-bot = telebot.TeleBot(BOT_TOKEN, parse_mode=None, threaded=False)
+from models import Post, User, engine
+
+bot = telebot.TeleBot(BOT_TOKEN)
 db_worker = DBWorker()
 
 def publish_post(msg):
@@ -70,7 +72,6 @@ def main():
     """Starts the bot and sets up the database.
     """
     bot.delete_webhook(drop_pending_updates=True)
-    db.create_tables([Post, User])
     bot.polling(timeout=6, long_polling_timeout=15)
 
 if __name__ == '__main__':
